@@ -1,0 +1,29 @@
+{
+  "sellers": [
+    {
+      "id": 0,
+      "telegram_username": "dhiogoboza",
+      "telegram_id": 0,
+      "customers": [
+        { "id": 0,  "telegram_username": "cadubentzen", "balance": 0.0 },
+        { "id": 1,  "telegram_username": "enocknt", "balance": 0.0 },
+      ],
+      "trufas": [
+        { "name": "Beijinho", "price": 1.5 },
+        { "name": "Brigadeiro", "price": 1.5 },
+      ]
+    }
+  ],
+  "customers": [
+    {
+      "id": 0,
+      "telegram_username": "cadubentzen",
+      "telegram_id": 0,
+      "seller_id": 0,
+      "transactions": [
+        { "type": "+", "text": "Trufa de Beijinho", "value": 1.5 },
+        { "type": "-", "text": "Pagamento", "value": 10.0 },
+      ]
+    }
+  ],
+}

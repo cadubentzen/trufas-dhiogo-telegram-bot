@@ -1,0 +1,45 @@
+// This text file shows the conversation flow that the bot will have with
+// the user.
+
+// Text messages are between quotes, custom messages are capitalized,
+// and commands start with "/"
+
+
+// Start of conversation
+  // If the user has a telegram username...
+  Bot: "Welcome to Trufas do Dhiogo. Are you a seller or a customer?"
+  Bot: DISPLAY A CHOICE PICKER. Choices: [ Seller, Customer ]
+    * User clicks on a button
+  User: /newseller or /newcustomer
+
+  // Else...
+  Bot: "Welcome to Trufas do Dhiogo. I noticed you don't have a telegram username.
+        Please go to settings and choose a username for you. It's needed so other
+        users can refer to you here. Example: a customer setting their seller."
+  Bot: Display a DONE button
+    * User clicks on the DONE button
+  User: /doneusername
+    * Bot checks if the user now has a username.
+    * If so,
+  Bot: "Great! Your username is @username. Are you a seller or customer?"
+  Bot: DISPLAYS A CHOICE PICKER. Choices: [ Seller, Customer ]
+    * User clicks on a button
+  User: /newseller or /newcustomer
+    * Else,
+  Bot: Ops.. It seems like you have not set a username yet. Please do it.
+  Bot: Display a DONE button
+
+
+// After a /newseller command
+  // If the user wasn't already a seller...
+  Bot: "Awesome! You're now a Trufa seller. To start selling, I recommend you set
+        up a menu."
+  Bot: DISPLAY BUTTONS. Choices: [My menu, My customers]
+   * User clicks on a button
+  User: /menu or /customers
+
+  // Else,
+  Bot: "Welcome back!"
+  Bot: DISPLAY BUTTONS. Choices: [My menu, My customers]
+   * User clicks on a button
+  User: /menu or /customers
