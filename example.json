@@ -20,10 +20,20 @@
       "telegram_username": "cadubentzen",
       "telegram_id": 0,
       "seller_id": 0,
-      "transactions": [
-        { "type": "+", "text": "Trufa de Beijinho", "value": 1.5 },
-        { "type": "-", "text": "Pagamento", "value": 10.0 },
-      ]
     }
   ],
+  "transactions": [
+    {
+      "customer": 0,
+      "seller": 0,
+      "description": "Buy 1 trufa de beijinho",
+      "value": 1.5
+    },
+    {
+      "customer": 0,
+      "seller": 0,
+      "description": "Payment",
+      "value": -20.0
+    }
+  ]
 }

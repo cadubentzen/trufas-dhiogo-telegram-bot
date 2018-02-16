@@ -1,0 +1,16 @@
+# Commands the bot can use
+
+# Customers
+- /setseller username
+- /menu
+- /buy name value
+- /balance
+
+
+# Seller
+- /getcustomers
+- /addcustomer username
+- /rmcustomer username
+- /additem name price
+- /rmitem id
+- /paid username value

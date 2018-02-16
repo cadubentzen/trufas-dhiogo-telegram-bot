@@ -1,5 +1,5 @@
 # lowdb json file
-database.json
+db.json
 
 # Logs
 logs
