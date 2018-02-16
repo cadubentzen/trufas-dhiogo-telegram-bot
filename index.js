@@ -40,30 +40,55 @@ It's required so other users can mention you using the Trufas bot.`,
   }
 });
 
-function newSeller(reply) {
-  reply('Hi seller!');
+function sellerCommands() {
+  return `
+**/listcustomers** - List your customers and their balances
+**/addcustomer** _@username_ - Add new customer to your list.
+**/rmcustomer** _@username_ - Remove customer from your list.
+**/additem** _name price_ - Add item to our menu. e.g. /additem Beijinho 1.5
+**/rmitem** - Remove item from your list.
+**/paid** _username value_ - Register payment from one of your users.
+**/help** - Get this list of commands
+`;
+}
+
+function newSeller({ id, username }, replyWithMarkdown) {
+  const seller = db.get('sellers')
+    .find({ id, username })
+    .value();
+
+  if (seller == null) {
+    db.get('sellers')
+      .push({ id, username })
+      .write();
+  }
+
+  replyWithMarkdown(`
+${seller == null ? 'Amazing' : 'Welcome back'}, @${username}!
+${seller == null ? 'You\'re now a seller. ' : ''}Here is the list of commands available:
+${sellerCommands()}
+  `);
 }
 
 function newCustomer(reply) {
   reply('Hi customer!');
 }
 
-bot.on('callback_query', ({ callbackQuery, reply }) => {
+bot.on('callback_query', ({ callbackQuery, reply, replyWithMarkdown }) => {
   console.log(callbackQuery.data);
 
-  if (!('chat' in callbackQuery.message)
+  if (!('from' in callbackQuery)
       || !('data' in callbackQuery)) {
     return;
   }
 
-  const { data } = callbackQuery;
-  const { chat } = callbackQuery.message;
+  const { data, from } = callbackQuery;
 
   switch (data) {
     case 'doneusername':
-      if ('username' in chat) {
+      if ('username' in from) {
         reply(
-          `Great, @${chat.username}! Are you a seller or a customer?`,
+          `Great, @${from.username}! Are you a seller or a customer?`,
           sellerOrCustomer()
         );
       } else {
@@ -77,8 +102,8 @@ bot.on('callback_query', ({ callbackQuery, reply }) => {
       }
       break;
     case 'newseller':
-      console.log('newseller');
-      newSeller(reply);
+      console.log(callbackQuery);
+      newSeller(from, replyWithMarkdown);
       break;
     case 'newcustomer':
       console.log('newcustomer');
@@ -87,10 +112,6 @@ bot.on('callback_query', ({ callbackQuery, reply }) => {
     default:
       break;
   }
-});
-
-bot.on('inline_query', () => {
-  console.log('inline_query');
 });
 
 // Command handling

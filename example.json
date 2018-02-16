@@ -2,11 +2,10 @@
   "sellers": [
     {
       "id": 0,
-      "telegram_username": "dhiogoboza",
-      "telegram_id": 0,
+      "username": "dhiogoboza",
       "customers": [
-        { "id": 0,  "telegram_username": "cadubentzen", "balance": 0.0 },
-        { "id": 1,  "telegram_username": "enocknt", "balance": 0.0 },
+        { "username": "cadubentzen", "balance": 0.0 },
+        { "username": "enocknt", "balance": 0.0 },
       ],
       "trufas": [
         { "name": "Beijinho", "price": 1.5 },
@@ -17,9 +16,8 @@
   "customers": [
     {
       "id": 0,
-      "telegram_username": "cadubentzen",
-      "telegram_id": 0,
-      "seller_id": 0,
+      "username": "cadubentzen",
+      "seller": "dhiogoboza",
     }
   ],
   "transactions": [
