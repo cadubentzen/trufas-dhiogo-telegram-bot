@@ -1,0 +1,25 @@
+graph LR
+START -- /newcustomer --> CUSTOMER_EXISTS{Customer already exists?}
+style START fill:#f00
+
+CUSTOMER_EXISTS -- YES --> WELCOME_BACK(Welcome back)
+
+CUSTOMER_EXISTS -- NO --> SELLER_USERNAME(Seller username)
+
+SELLER_USERNAME --> CUSTOMER_INSERTS_SELLER[Customer types seller's   username]
+
+CUSTOMER_INSERTS_SELLER --> SELLER_EXISTS{Seller exists?}
+
+
+SELLER_EXISTS -- YES --> GREAT_MESSAGE(Great)
+GREAT_MESSAGE --> CUSTOMER_CHOICES
+SELLER_EXISTS -- NO --> INVITE_SELLER[Invite seller]
+SELLER_JOINED(Seller joined) --> CUSTOMER_CHOICES
+
+WELCOME_BACK --> CUSTOMER_CHOICES((Customer choices))
+
+CUSTOMER_CHOICES -- /buy -->MENU((Menu))
+CUSTOMER_CHOICES -- /balance --> BALANCE(Balance)
+
+MENU --"/register price Name" --> CUSTOMER_CHOICES
+BALANCE --> CUSTOMER_CHOICES

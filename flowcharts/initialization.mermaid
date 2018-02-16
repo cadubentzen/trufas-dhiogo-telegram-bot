@@ -1,0 +1,22 @@
+graph LR
+START --> HASUSERNAME{User has a username?}
+style START fill:#f00
+
+subgraph Initialization
+HASUSERNAME -- YES --> WELCOME(Welcome)
+
+HASUSERNAME -- NO --> CREATE_USERNAME(Create username)
+
+WELCOME --> CHOICE_TYPE((Type of user))
+
+CREATE_USERNAME --> CREATED_BUTTON((Created))
+
+CREATED_BUTTON -- /createdusername --> CREATED_USERNAME{Received username?}
+
+CREATED_USERNAME -- YES --> CHOICE_TYPE
+CREATED_USERNAME -- NO --> CREATE_USERNAME
+end
+
+CHOICE_TYPE -- /newcustomer --> CUSTOMER[Customer flow]
+
+CHOICE_TYPE -- /newseller --> SELLER[Seller flow]
