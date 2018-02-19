@@ -2,8 +2,8 @@
 
 # Customers
 - /setseller username
-- /menu
-- /buy name value
+- /buy
+- /pay value
 - /balance
 
 
@@ -11,6 +11,7 @@
 - /getcustomers
 - /addcustomer username
 - /rmcustomer username
-- /additem name price
-- /rmitem id
+- /addtrufa name price
+- /rmtrufa id
+- /bought // Review this command
 - /paid username value
