@@ -72,16 +72,17 @@ function isSeller(username) {
 
 function addCustomerToSeller(customerUsername, sellerUsername) {
   // Add customer to seller's list
-  const customers = db.get('sellers')
+  const customerInSeller = db.get('sellers')
     .find({ username: sellerUsername })
     .get('customers')
+    .find({ username: customerUsername })
     .value();
 
-  if (customers === undefined || !customers.includes(customerUsername)) {
+  if (customerInSeller === undefined) {
     db.get('sellers')
       .find({ username: sellerUsername })
       .get('customers')
-      .push(customerUsername)
+      .push({ username: customerUsername, balance: 0.0 })
       .write();
   }
 
@@ -92,15 +93,18 @@ function addCustomerToSeller(customerUsername, sellerUsername) {
     .write();
 }
 
-bot.command('setseller', ({ message, from, reply }) => {
+bot.command('setseller', ({
+  message, from, reply, replyWithMarkdown
+}) => {
   // First parse message to extract the seller's username
-  const sellerUsername = message.text.split(' ')[1];
+  const args = message.text.split(' ');
 
-  // For now I'll just return.
-  if (sellerUsername === undefined) {
-    console.log('no username passed');
+  if (args.length !== 2) {
+    replyWithMarkdown(setSellerPrompt);
     return;
   }
+
+  const sellerUsername = args[1];
 
   if (isSeller(sellerUsername)) {
     addCustomerToSeller(from.username, sellerUsername);
@@ -131,34 +135,36 @@ bot.command('buy', ({ from, reply, replyWithMarkdown }) => {
   const sellerUsername = getCustomerSeller(from.username);
 
   if (sellerUsername === undefined) {
-    // TODO: treat not initialized
-    // replyWithMarkdown()
+    replyWithMarkdown(`You don't have a seller yet. ${setSellerPrompt}`);
+    return;
   }
-
-  console.log(sellerUsername);
 
   const sellerTrufas = getSellerTrufas(sellerUsername);
 
-  console.log(sellerTrufas);
+  if (sellerTrufas.length === 0) {
+    reply(`Your seller has no flavours of trufas yet 😕
+Ask @${sellerUsername} to add trufas.`);
+    return;
+  }
 
   reply(
     'Choose your flavour',
     Extra.HTML().markup(m =>
       m.inlineKeyboard(sellerTrufas.map(({ name, price }) =>
-        m.callbackButton(
+        [m.callbackButton(
           `${name} - R$${price}`,
           `buy ${name.replace(/ /g, '')} ${-price}`
-        ))))
+        )])))
   );
 });
 
-function registerTransaction(customer, description, value) {
+function registerTransaction(customer, description, value, date) {
   const seller = getCustomerSeller(customer);
 
   // Register on the transactions array
   db.get('transactions')
     .push({
-      customer, seller, description, value
+      customer, seller, description, value, date
     })
     .write();
 
@@ -201,6 +207,7 @@ bot.on('callback_query', (ctx) => {
     case 'doneusername':
       telegram.deleteMessage(chat.id, message_id);
       if ('username' in from) {
+        addCustomer(from.id, from.username);
         reply(`Great, @${from.username}! ${setSellerPrompt}`);
       } else {
         reply(
@@ -216,7 +223,8 @@ bot.on('callback_query', (ctx) => {
       registerTransaction(
         from.username,
         `Buy Trufa de ${args[1]}`,
-        parseFloat(args[2])
+        parseFloat(args[2]),
+        (new Date()).toString()
       );
 
       const balance = getCustomerBalance(from.username);
@@ -249,8 +257,9 @@ Example: /pay 10.5`);
 });
 
 bot.command('balance', ({ from, reply }) => {
-  // TODO: Treat for errors
   const balance = getCustomerBalance(from.username);
+
+  if (balance === undefined) return;
 
   reply(balanceMessage(balance));
 });
